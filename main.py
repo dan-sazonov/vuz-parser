@@ -111,17 +111,51 @@ class SPBGEU:
             print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{self.interesting[spec][1]}")
 
 
+class GUMRF:
+    def __init__(self):
+        self.univer_name = 'ГУМРФ'
+        self.interesting = {
+            'Информационная безопасность': (1, 12),
+            'Информационная безопасность автоматизированных систем': (2, 15),
+            'Информационные системы и технологии': (3, 18),
+            'Прикладная информатика': (6, 20),
+            'Прикладная математика и информатика': (7, 11)
+        }
+        self.predefined_data = []  # for future versions
+        self.scraped_data = []
+
+    def scrap(self):
+        response = requests.get('http://gumrf.ru/reserve/abitur/hod/?type=111')
+        soup = BeautifulSoup(response.text, 'lxml')
+        data_raw = str(soup.select('.spoiler')[0])
+        for abt in data_raw.split('</details><details>'):
+            abt = abt.split('\n')[-1].split('<td colspan="11">')[-1]
+            self.scraped_data.append(abt.split('</td><td class="">')[1:])
+        # print(*self.scraped_data, sep='\n')
+
+
+
+    #
+    # def get(self):
+    #     for spec in self.interesting:
+    #         last_point, highest_place, usr_place = format_arr(self.scrap(self.interesting[spec][0]),
+    #                                                           self.interesting[spec][1])
+    #         print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{self.interesting[spec][1]}")
+
+
 def main():
-    usr_input = int(input('Введите номер вуза: '))
-    universities = {
-        1: GUAP,
-        2: LETI,
-        3: SPBGEU
-    }
-    if usr_input in universities.keys():
-        univer = universities[usr_input]()
-        print(univer.univer_name)
-        univer.get()
+    c = GUMRF()
+    c.scrap()
+    # usr_input = int(input('Введите номер вуза: '))
+    # universities = {
+    #     1: GUAP,
+    #     2: LETI,
+    #     3: SPBGEU
+    # }
+    # if usr_input in universities.keys():
+    #     univer = universities[usr_input]()
+    #     print(univer.univer_name)
+    #     univer.get()
 
 
 if __name__ == '__main__':
