@@ -1,5 +1,7 @@
 import colorama
 
+TOTAL_POINTS = 259
+
 
 class ColorMethods:
     def __init__(self):
