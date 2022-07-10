@@ -20,11 +20,13 @@ def scrap_guap(url):
 
 def get_guap():
     specialties = {
-        'Информационные системы и технологии': 'https://priem.guap.ru/_lists/List_1698_14',
-        'Информатика и вычислительная техника': 'https://priem.guap.ru/_lists/List_1693_14'
+        'Информационные системы и технологии': ('https://priem.guap.ru/_lists/List_1698_14', 42),
+        'Информатика и вычислительная техника': ('https://priem.guap.ru/_lists/List_1693_14', 79)
     }
     for spec in specialties:
-        print(f"{spec}: {scrap_guap(specialties[spec])}")
+        points = scrap_guap(specialties[spec][0])
+        last_point = points[specialties[spec][1]]
+        print(f"{spec}: {last_point}")
 
 
 def main():
