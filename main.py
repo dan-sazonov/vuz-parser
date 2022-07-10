@@ -61,7 +61,9 @@ class LETI:
     def __init__(self):
         self.univer_name = 'ЛЭТИ'
         self.interesting = {
-            'Инфокоммуникационные технологии и системы связи': ('https://abit.etu.ru/ru/postupayushhim/bakalavriat-i-specialitet/spiski-podavshih-zayavlenie/spisok-postupayushhih?list=4-183', 70)
+            'Инфокоммуникационные технологии и системы связи': (
+            'https://abit.etu.ru/ru/postupayushhim/bakalavriat-i-specialitet/spiski-podavshih-zayavlenie/spisok-postupayushhih?list=4-183',
+            70)
         }
         self.predefined_data = []  # for future versions
 
@@ -89,7 +91,9 @@ class SPBGEU:
     def __init__(self):
         self.univer_name = 'СПбГЭУ'
         self.interesting = {
-            'Информационная безопасность': ('https://priem.unecon.ru/stat/stat_konkurs.php?filial_kod=1&zayav_type_kod=1&obr_konkurs_kod=0&recomend_type=null&rec_status_kod=all&ob_forma_kod=1&ob_osnova_kod=1&konkurs_grp_kod=4245&prior=all&status_kod=all&has_agreement=all&show=%D0%9F%D0%BE%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C', 6)
+            'Информационная безопасность': (
+            'https://priem.unecon.ru/stat/stat_konkurs.php?filial_kod=1&zayav_type_kod=1&obr_konkurs_kod=0&recomend_type=null&rec_status_kod=all&ob_forma_kod=1&ob_osnova_kod=1&konkurs_grp_kod=4245&prior=all&status_kod=all&has_agreement=all&show=%D0%9F%D0%BE%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C',
+            6)
         }
         self.predefined_data = []  # for future versions
 
@@ -124,16 +128,15 @@ class GUMRF:
         self.predefined_data = []  # for future versions
         self.scraped_data = []
 
-    def scrap(self):
         response = requests.get('http://gumrf.ru/reserve/abitur/hod/?type=111')
         soup = BeautifulSoup(response.text, 'lxml')
         data_raw = str(soup.select('.spoiler')[0])
         for abt in data_raw.split('</details><details>'):
             abt = abt.split('\n')[-1].split('<td colspan="11">')[-1]
             self.scraped_data.append(abt.split('</td><td class="">')[1:])
-        # print(*self.scraped_data, sep='\n')
 
-
+    def scrap(self):
+        print(*self.scraped_data, sep='\n')
 
     #
     # def get(self):
