@@ -73,7 +73,8 @@ class LETI:
 
         for abt in data_raw.split('</tr>\n<tr>'):
             abt = BeautifulSoup(abt, 'lxml')
-            data_arr.append(int(abt.select('.ball')[0].text))
+            if abt.select('.group')[0].text == 'ОК':
+                data_arr.append(int(abt.select('.ball')[0].text))
 
         return sorted(data_arr, reverse=True)
 
