@@ -22,6 +22,7 @@ def format_arr(arr, adm_amount):
 
 class GUAP:
     def __init__(self):
+        self.univer_name = 'ГУАП'
         self.interesting = {
             'Информационные системы и технологии': ('https://priem.guap.ru/_lists/List_1698_14', 42),
             'Информатика и вычислительная техника': ('https://priem.guap.ru/_lists/List_1693_14', 79),
@@ -58,6 +59,7 @@ class GUAP:
 
 class LETI:
     def __init__(self):
+        self.univer_name = 'ЛЭТИ'
         self.interesting = {
             'Инфокоммуникационные технологии и системы связи': ('https://abit.etu.ru/ru/postupayushhim/bakalavriat-i-specialitet/spiski-podavshih-zayavlenie/spisok-postupayushhih?list=4-183', 70)
         }
@@ -90,8 +92,8 @@ def main():
     }
     if usr_input in universities.keys():
         univer = universities[usr_input]()
-
-    univer.get()
+        print(univer.univer_name)
+        univer.get()
 
 
 if __name__ == '__main__':
