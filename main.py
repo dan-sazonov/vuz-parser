@@ -85,11 +85,38 @@ class LETI:
             print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{self.interesting[spec][1]}")
 
 
+class SPBGEU:
+    def __init__(self):
+        self.univer_name = 'СПбГЭУ'
+        self.interesting = {
+            'Информационная безопасность': ('https://priem.unecon.ru/stat/stat_konkurs.php?filial_kod=1&zayav_type_kod=1&obr_konkurs_kod=0&recomend_type=null&rec_status_kod=all&ob_forma_kod=1&ob_osnova_kod=1&konkurs_grp_kod=4245&prior=all&status_kod=all&has_agreement=all&show=%D0%9F%D0%BE%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C', 6)
+        }
+        self.predefined_data = []  # for future versions
+
+    def scrap(self, url):
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'lxml')
+        data_raw = str(soup.select('tbody')[1])
+        data_arr = self.predefined_data.copy()
+
+        for abt in data_raw.split('</tr><tr'):
+            data_arr.append(int(abt.split('</td><td')[4].strip('>')))
+
+        return sorted(data_arr, reverse=True)
+
+    def get(self):
+        for spec in self.interesting:
+            last_point, highest_place, usr_place = format_arr(self.scrap(self.interesting[spec][0]),
+                                                              self.interesting[spec][1])
+            print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{self.interesting[spec][1]}")
+
+
 def main():
     usr_input = int(input('Введите номер вуза: '))
     universities = {
         1: GUAP,
-        2: LETI
+        2: LETI,
+        3: SPBGEU
     }
     if usr_input in universities.keys():
         univer = universities[usr_input]()
