@@ -6,18 +6,6 @@ import config
 c = config.ColorMethods()
 
 
-def scrap_guap(url):
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'lxml')
-    data_raw = str(soup.select('#tablestat tbody')[0])
-    data_arr = []
-
-    for abt in data_raw.split('</tr><tr class="warning">'):
-        data_arr.append(int(abt.split('</td><td>')[2]))
-
-    return sorted(data_arr, reverse=True)
-
-
 def format_arr(arr, adm_amount):
     last_point = arr[adm_amount]
     highest_place = 0
@@ -32,22 +20,50 @@ def format_arr(arr, adm_amount):
     return last_point, highest_place, usr_place
 
 
-def get_guap():
-    specialties = {
-        'Информационные системы и технологии': ('https://priem.guap.ru/_lists/List_1698_14', 42),
-        'Информатика и вычислительная техника': ('https://priem.guap.ru/_lists/List_1693_14', 79)
-    }
-    for spec in specialties:
-        # points = scrap_guap(specialties[spec][0])
-        # last_point = points[specialties[spec][1]]
-        last_point, highest_place, usr_place = format_arr(scrap_guap(specialties[spec][0]), specialties[spec][1])
-        print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{specialties[spec][1]}")
+class GUAP:
+    def __init__(self):
+        self.interesting = {
+            'Информационные системы и технологии': ('https://priem.guap.ru/_lists/List_1698_14', 42),
+            'Информатика и вычислительная техника': ('https://priem.guap.ru/_lists/List_1693_14', 79),
+            "Прикладная математика и информатика": ("https://priem.guap.ru/_lists/List_1370_14", 16),
+            "Математическое обеспечение и администрирование информационных систем": (
+                "https://priem.guap.ru/_lists/List_1404_14", 12),
+            "Прикладная информатика": ("https://priem.guap.ru/_lists/List_1413_14", 126),
+            "Программная инженерия": ("https://priem.guap.ru/_lists/List_1414_14", 42),
+            "Информационная безопасность": ("https://priem.guap.ru/_lists/List_1415_14", 42),
+            "Инфокоммуникационные технологии и системы связи": ("https://priem.guap.ru/_lists/List_1694_14", 84),
+            "Управление в технических системах": ("https://priem.guap.ru/_lists/List_1385_14", 21),
+            "Инноватика": ("https://priem.guap.ru/_lists/List_1384_14", 16),
+        }
+        self.predefined_data = []  # for future versions
+
+    def scrap(self, url):
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'lxml')
+        data_raw = str(soup.select('#tablestat tbody')[0])
+        data_arr = self.predefined_data.copy()
+
+        for abt in data_raw.split('</tr><tr class="warning">'):
+            data_arr.append(int(abt.split('</td><td>')[2]))
+
+        return sorted(data_arr, reverse=True)
+
+    def get(self):
+        for spec in self.interesting:
+            last_point, highest_place, usr_place = format_arr(self.scrap(self.interesting[spec][0]),
+                                                              self.interesting[spec][1])
+            print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{self.interesting[spec][1]}")
 
 
 def main():
     usr_input = int(input('Введите номер вуза: '))
-    if usr_input == 1:
-        get_guap()
+    universities = {
+        1: GUAP
+    }
+    if usr_input in universities.keys():
+        univer = universities[usr_input]()
+
+    univer.get()
 
 
 if __name__ == '__main__':
