@@ -135,30 +135,33 @@ class GUMRF:
             abt = abt.split('\n')[-1].split('<td colspan="11">')[-1]
             self.scraped_data.append(abt.split('</td><td class="">')[1:])
 
-    def scrap(self):
-        print(*self.scraped_data, sep='\n')
+    def scrap(self, index):
+        data_arr = self.predefined_data.copy()
 
-    #
-    # def get(self):
-    #     for spec in self.interesting:
-    #         last_point, highest_place, usr_place = format_arr(self.scrap(self.interesting[spec][0]),
-    #                                                           self.interesting[spec][1])
-    #         print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{self.interesting[spec][1]}")
+        for i in self.scraped_data[index]:
+            data_arr.append(int(i.split('</td><td')[1].strip('>')))
+
+        return sorted(data_arr, reverse=True)
+
+    def get(self):
+        for spec in self.interesting:
+            last_point, highest_place, usr_place = format_arr(self.scrap(self.interesting[spec][0]),
+                                                              self.interesting[spec][1])
+            print(f"{spec}: {last_point}; {usr_place}-{highest_place}/{self.interesting[spec][1]}")
 
 
 def main():
-    c = GUMRF()
-    c.scrap()
-    # usr_input = int(input('Введите номер вуза: '))
-    # universities = {
-    #     1: GUAP,
-    #     2: LETI,
-    #     3: SPBGEU
-    # }
-    # if usr_input in universities.keys():
-    #     univer = universities[usr_input]()
-    #     print(univer.univer_name)
-    #     univer.get()
+    usr_input = int(input('Введите номер вуза: '))
+    universities = {
+        1: GUAP,
+        2: LETI,
+        3: SPBGEU,
+        4: GUMRF
+    }
+    if usr_input in universities.keys():
+        univer = universities[usr_input]()
+        print(univer.univer_name)
+        univer.get()
 
 
 if __name__ == '__main__':
